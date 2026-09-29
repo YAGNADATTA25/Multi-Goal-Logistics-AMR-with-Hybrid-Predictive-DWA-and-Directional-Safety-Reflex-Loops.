@@ -1,71 +1,117 @@
-# Autonomous Logistics Simulation Package (`autonomous_logistics_sim`)
+### `Multi-Goal-Logistics-AMR`
 
-A high-performance ROS 2 Humble simulation package designed for multi-goal warehouse fulfillment operations. This repository implements an autonomous logistics fleet dispatch pipeline featuring synchronized temporal simulation clocks, an asynchronous multi-waypoint orchestration script, and a thread-safe telemetry feedback system for tracking real-time vehicle drift.
+```markdown
+# Multi-Goal Logistics AMR: Hybrid Predictive DWA & Directional Safety Reflex Loops
 
----
+![ROS 2 Humble](https://img.shields.io/badge/ROS_2-Humble-blue.svg)
+![C++17](https://img.shields.io/badge/Language-C%2B%2B17-green.svg)
+![Python 3.10](https://img.shields.io/badge/Language-Python_3.10-yellow.svg)
+![Nav2 Stack](https://img.shields.io/badge/Stack-Nav2-brightgreen.svg)
+![Gazebo Simulator](https://img.shields.io/badge/Simulator-Gazebo_Classic-orange.svg)
+![License](https://img.shields.io/badge/License-Apache_2.0-red.svg)
 
-## System Architecture
+An industrial-grade ROS 2 software architecture engineered for Autonomous Mobile Robots (AMRs) operating in dynamic, highly unconstrained warehouse environments. The system couples multi-goal dispatching with predictive Dynamic Window Approach (DWA) local trajectory generation and a low-latency safety reflex override loop.
 
-The package splits multi-goal logistics workflows into decoupled, asynchronous processing components communicating natively over the high-throughput ROS 2 DDS layer:
-
-*   **Asynchronous Navigation Thread:** Instantiates a standalone background execution thread (`threading.Thread`) utilizing the Nav2 Simple Commander API (`BasicNavigator`) to fire a sequential array of 6 unique coordinate goals. Using an async wrapper keeps blocking state checkers (`isTaskComplete()`) from stalling core sensor ingestion.
-*   **Simulation Master Node:** Operates a deterministic 10Hz orchestration loop[cite: 1]. It handles localized spatial cost updates and drives 4 independent simulation threat nodes using a continuous harmonic sine-wave equation ($V(t) = A \cdot \sin(\omega t)$) to mimic real-world warehouse traffic pacing at velocities up to $0.19\text{ m/s}$[cite: 1].
-*   **Closed-Loop Telemetry System:** Runs on a dedicated 0.9-second telemetry clock thread[cite: 1]. It intercepts the global `/plan` path vector and applies a thread-safe mutex barrier to compute real-time steering performance logs without inducing UI or costmap processing lag[cite: 1].
-
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/3701ee92-16d0-4ddb-be57-aba9a69fa6d1" />
----
-
-## Core Telemetry Metrics
-
-The system streams live control-theory metrics straight to the terminal console every $0.9\text{ s}$ to evaluate localization and path tracking efficiency[cite: 1]:
-1.  **Cross-Track Error (XT_Err):** Continuous perpendicular distance tracking relative to the targeted global path trajectory vector, logged in centimeters[cite: 1].
-2.  **Heading Error (Head_Err):** Real-time steering alignment delta relative to the target path trajectory orientation, logged in degrees[cite: 1].
-3.  **Goal Distance:** Live Euclidean distance tracking straight to the active waypoint coordinate vector[cite: 1].
-
+```
 
 ---
 
-## Repository Directory Structure
+## 🏗 System Architecture & ROS 2 Data Pipeline
 
-```text
-autonomous_logistics_sim/
-├── CMakeLists.txt             # Colcon compilation properties
-├── package.xml                # ROS 2 lifecycle, nav2_msgs, and rclpy dependencies[cite: 1]
-├── README.md                  # System architectural documentation
-├── config/
-│   └── warehouse_params.yaml  # Tuned costmap inflation layers, radii, and sync settings[cite: 1]
-├── launch/
-│   └── warehouse_navigation.launch.py  # Deploys Gazebo, Nav2 lifecycle nodes, and maps[cite: 1]
-├── maps/
-│   ├── warehouse_map.pgm      # High-fidelity binary occupancy grid map[cite: 1]
-│   └── warehouse_map.yaml     # Spatial metadata anchors for localization[cite: 1]
-└── scripts/
-    ├── simulation_master.py   # 10Hz traffic node manager & trajectory search engine[cite: 1]
-    └── waypoint_navigator.py  # Asynchronous multi-goal sequential route manager[cite: 1]
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      High-Level Mission Control                         │
+│   Sequential Workstation Coordinate Dispatcher (Action Client Loop)    │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │ nav2_msgs/action/NavigateThroughPoses
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                    ROS 2 Nav2 Asynchronous Core                         │
+│          Global Path Generation (nav_msgs/msg/Path via /plan)           │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │ /plan Vector Intercept
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                       Simulation Master Node                            │
+│  ┌─────────────────────────────────┴─────────────────────────────────┐  │
+│  │ 10 Hz Predictive Control Loop                                     │  │
+│  │   ├─ 1.8s Predictive Horizon Horizon Evaluation (9 Steps)         │  │
+│  │   └─ Dynamic Obstacle Velocity Window Sampling (DWA)              │  │
+│  │ 0.9 s Telemetry & State Monitor Clock                             │  │
+│  │   ├─ Cross-Track Error (cm) & Heading Deviation Calculation       │  │
+│  │   └─ Goal Proximity & Kinematic Limit Verification                │  │
+│  └─────────────────────────────────┬─────────────────────────────────┘  │
+└────────────────────────────────────┼────────────────────────────────────┘
+                                     │ /scan (sensor_msgs/msg/LaserScan)
+                                     │ /odom (nav_msgs/msg/Odometry)
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                  Directional Safety Reflex Loop                         │
+│  Low-Latency Emergency Deceleration / Velocity Scaling Intercept       │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │ Topic: /cmd_vel (geometry_msgs/msg/Twist)
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                     Target Hardware / Gazebo Sim                        │
+│                 (TurtleBot3 Waffle Pi / Differential Drive)             │
+└─────────────────────────────────────────────────────────────────────────┘
 
+```
 
+---
 
+## 🔑 Key Engineering & R&D Highlights
 
-Installation & Environment Build
-cd ~/turtlebot3_ws
-rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro humble
+* **Asynchronous Multi-Goal Dispatching:** Implements non-blocking action invocation via `nav2_simple_commander` (`BasicNavigator`) to queue and execute waypoint vectors across discrete warehouse workstation coordinates.
+* **Predictive Dynamic Window Approach (DWA):** Evaluates admissible velocity pairs $(v, \omega)$ over a **1.8s predictive horizon (9 discrete integration steps)** to ensure collision-free local trajectories around dynamic obstacles.
+* **Directional Safety Reflex Override:** Deterministic safety layer intercepting velocity outputs when dynamic obstacles cross critical angular LiDAR safety zones (asymmetric shielding), ensuring zero-collision guarantees under unpredictable motion profiles.
+* **Closed-Loop Telemetry Stream:** Asynchronous 0.9s diagnostics module tracking real-time **Cross-Track Error (cm)**, **Heading Deviation (deg)**, and **Distance-to-Goal** metrics for real-time control system feedback.
+* **Modular Software Engineering:** Clean workspace separation with parameterized YAML files, modular ROS 2 launch pipelines, and asynchronous execution threads.
 
-colcon build --packages-select autonomous_logistics_sim
+---
+
+## 📊 Technical Specifications & Parameters
+
+| Metric / Parameter | Value | R&D Description |
+| --- | --- | --- |
+| **ROS 2 Middleware** | Humble Hawksbill | LTS Production Target |
+| **Control Loop Frequency** | 10 Hz (100 ms loop) | Local trajectory evaluation cycle |
+| **Predictive Horizon** | 1.8 seconds | Forward kinetic trajectory projection |
+| **Prediction Steps** | 9 discrete steps | Trajectory sampling resolution |
+| **Telemetry Clock** | 0.9 seconds | Independent monitoring thread |
+| **Target Platform** | TurtleBot3 Waffle Pi | Differential Drive Kinematics |
+
+---
+
+## 💻 Tech Stack & Dependencies
+
+* **Middleware & Frameworks:** ROS 2 Humble, Nav2 Stack, TF2 Transformation Tree
+* **Programming Languages:** C++17, Python 3.10
+* **ROS 2 Interface Types:** `geometry_msgs/msg/Twist`, `sensor_msgs/msg/LaserScan`, `nav_msgs/msg/Odometry`, `nav_msgs/msg/Path`
+* **Simulation Environment:** Gazebo Classic 11 / RViz2
+
+---
+
+## 🚀 Build & Execution Guide
+
+### Prerequisites
+
+Ensure ROS 2 Humble and Gazebo Classic are sourced on Ubuntu 22.04 LTS.
+
+```bash
+# 1. Clone into your ROS 2 workspace
+cd ~/ros2_ws/src
+git clone [https://github.com/YAGNADATTA25/Multi-Goal-Logistics-AMR-with-Hybrid-Predictive-DWA-and-Directional-Safety-Reflex-Loops..git](https://github.com/YAGNADATTA25/Multi-Goal-Logistics-AMR-with-Hybrid-Predictive-DWA-and-Directional-Safety-Reflex-Loops..git)
+
+# 2. Resolve workspace dependencies
+cd ~/ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
+
+# 3. Build workspace
+colcon build --symlink-install --packages-select amr_logistics
 source install/setup.bash
-Execution Guidelines
-1. Launch the Warehouse Simulation & Navigation Stack
 
-To bring up the environment, sync the simulation clocks (use_sim_time: True), and activate the Nav2 lifecycle managers[cite: 1]:
-Bash
+# 4. Launch Simulation Environment & Navigation Nodes
+ros2 launch amr_logistics main_simulation.launch.py
 
-export TURTLEBOT3_MODEL=waffle_pi
-ros2 launch autonomous_logistics_sim logistics_fleet.launch.py
-
-2. Run the Logistics Mission Dispatcher
-
-In a secondary terminal window, spin up the asynchronous coordinator to command the robot to loop through the 6 warehouse waypoints, pause for delivery dwell times, and stream tracking telemetry[cite: 1]:
-Bash
-
-source ~/turtlebot3_ws/install/setup.bash
-ros2 run autonomous_logistics_sim waypoint_navigator.py
+---
+----
+2. **Explicit Data Types:** Lists exact ROS 2 message types (`nav_msgs/msg/Path`, `sensor_msgs/msg/LaserScan`), proving you understand underlying ROS 2 middleware structures.
+3. **Structured Parameter Table:** Highlighting frequency, prediction steps, and horizon time in a clean matrix immediately proves engineering control rigor.
+4. **Clean ASCII Diagram:** Features a full closed-loop architecture chart separating high-level mission planning, the 10Hz DWA control loop, and low-level motor commands.

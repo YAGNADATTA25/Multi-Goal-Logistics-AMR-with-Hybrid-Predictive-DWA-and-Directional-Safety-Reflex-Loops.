@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction, DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription, TimerAction, DeclareLaunchArgument, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
@@ -12,7 +12,15 @@ def generate_launch_description():
     pkg_tb3_gazebo = get_package_share_directory('turtlebot3_gazebo')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world_path = os.path.join(pkg_sim_dir, 'worlds', 'warehouse.world')
+    world_arg = DeclareLaunchArgument(
+        'world',
+        default_value=os.path.join(pkg_sim_dir, 'worlds', 'warehouse.world'),
+        description='Absolute path to the Gazebo world file'
+    )
+    world_path = LaunchConfiguration('world')
+    models_dir = os.path.join(pkg_sim_dir, 'models')
+    existing_model_path = os.environ.get('GAZEBO_MODEL_PATH', '')
+    model_path = models_dir + (os.pathsep + existing_model_path if existing_model_path else '')
     
     # 2. Set Model Variable (Crucial for Robot State Publisher)
     # We force it to waffle_pi to match your spawn command
@@ -56,6 +64,8 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        SetEnvironmentVariable('GAZEBO_MODEL_PATH', model_path),
+        world_arg,
         gzserver,
         gzclient,
         robot_state_publisher,

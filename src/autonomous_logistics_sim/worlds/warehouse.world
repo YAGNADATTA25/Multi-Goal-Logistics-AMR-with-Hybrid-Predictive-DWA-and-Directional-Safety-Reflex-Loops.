@@ -1,0 +1,168 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <include><uri>model://ground_plane</uri></include>
+    <include><uri>model://sun</uri></include>
+
+    <model name="outer_walls">
+      <static>true</static>
+      <link name="link">
+        <collision name="n"><pose>0 4 0.5 0 0 0</pose><geometry><box><size>8 0.1 1</size></box></geometry></collision>
+        <visual name="n_v"><pose>0 4 0.5 0 0 0</pose><geometry><box><size>8 0.1 1</size></box></geometry></visual>
+        <collision name="s"><pose>0 -4 0.5 0 0 0</pose><geometry><box><size>8 0.1 1</size></box></geometry></collision>
+        <visual name="s_v"><pose>0 -4 0.5 0 0 0</pose><geometry><box><size>8 0.1 1</size></box></geometry></visual>
+        <collision name="e"><pose>4 0 0.5 0 0 0</pose><geometry><box><size>0.1 8 1</size></box></geometry></collision>
+        <visual name="e_v"><pose>4 0 0.5 0 0 0</pose><geometry><box><size>0.1 8 1</size></box></geometry></visual>
+        <collision name="w"><pose>-4 0 0.5 0 0 0</pose><geometry><box><size>0.1 8 1</size></box></geometry></collision>
+        <visual name="w_v"><pose>-4 0 0.5 0 0 0</pose><geometry><box><size>0.1 8 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="internal_walls">
+      <static>true</static>
+      <link name="link">
+        <collision name="tl_h_c"><pose>-3.25 2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></collision>
+        <visual name="tl_h"><pose>-3.25 2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></visual>
+        <collision name="tl_v_c"><pose>-2.75 3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></collision>
+        <visual name="tl_v"><pose>-2.75 3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></visual>
+
+        <collision name="tr_h_c"><pose>3.25 2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></collision>
+        <visual name="tr_h"><pose>3.25 2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></visual>
+        <collision name="tr_v_c"><pose>2.75 3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></collision>
+        <visual name="tr_v"><pose>2.75 3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></visual>
+
+        <collision name="bl_h_c"><pose>-3.25 -2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></collision>
+        <visual name="bl_h"><pose>-3.25 -2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></visual>
+        <collision name="bl_v_c"><pose>-2.75 -3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></collision>
+        <visual name="bl_v"><pose>-2.75 -3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></visual>
+
+        <collision name="br_h_c"><pose>3.25 -2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></collision>
+        <visual name="br_h"><pose>3.25 -2.5 0.5 0 0 0</pose><geometry><box><size>1.5 0.1 1</size></box></geometry></visual>
+        <collision name="br_v_c"><pose>2.75 -3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></collision>
+        <visual name="br_v"><pose>2.75 -3.625 0.5 0 0 0</pose><geometry><box><size>0.1 0.75 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="ob1"><static>true</static><pose>1.5 1.7 0.5 0 0 0</pose><link name="l">
+        <collision name="c"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry><material><ambient>0 0 1 1</ambient></material></visual>
+    </link></model>
+    <model name="ob2"><static>true</static><pose>-1.5 1.7 0.5 0 0 0</pose><link name="l">
+        <collision name="c"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry><material><ambient>0 0 1 1</ambient></material></visual>
+    </link></model>
+    <model name="ob3"><static>true</static><pose>-1.5 -1.7 0.5 0 0 0</pose><link name="l">
+        <collision name="c"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry><material><ambient>0 0 1 1</ambient></material></visual>
+    </link></model>
+    <model name="ob4"><static>true</static><pose>1.5 -1.7 0.5 0 0 0</pose><link name="l">
+        <collision name="c"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.15</radius><length>1</length></cylinder></geometry><material><ambient>0 0 1 1</ambient></material></visual>
+    </link></model>
+    
+    <model name="warehouse_worker_1">
+      <static>false</static>
+      <pose>2.50 0.04 0.5 0 0 0</pose> 
+      <link name="link">
+        <inertial>
+          <mass>25.0</mass>
+          <inertia><ixx>2.0</ixx><iyy>2.0</iyy><izz>1.0</izz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <surface><friction><ode><mu>0.0</mu><mu2>0.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <material><ambient>1.0 0.5 0.0 1</ambient><diffuse>1.0 0.5 0.0 1</diffuse></material>
+        </visual>
+      </link>
+<plugin name="controller_1" filename="libgazebo_ros_planar_move.so">
+  <ros>
+    <remapping>cmd_vel:=cmd_vel_obstacle_1</remapping>
+    <remapping>odom:=odom_obstacle_1</remapping>
+  </ros>
+  <update_rate>20</update_rate>
+  <robot_base_frame>warehouse_worker_1</robot_base_frame> 
+</plugin>
+    </model>
+
+    <model name="warehouse_worker_2">
+      <static>false</static>
+      <pose>-0.07 -2.70 0.5 0 0 0</pose> 
+      <link name="link">
+        <inertial>
+          <mass>25.0</mass>
+          <inertia><ixx>2.0</ixx><iyy>2.0</iyy><izz>1.0</izz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <surface><friction><ode><mu>0.0</mu><mu2>0.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <material><ambient>1.0 0.5 0.0 1</ambient><diffuse>1.0 0.5 0.0 1</diffuse></material>
+        </visual>
+      </link>
+<plugin name="controller_2" filename="libgazebo_ros_planar_move.so">
+  <ros>
+    <remapping>cmd_vel:=cmd_vel_obstacle_2</remapping>
+    <remapping>odom:=odom_obstacle_2</remapping>
+  </ros>
+  <update_rate>20</update_rate>
+  <robot_base_frame>warehouse_worker_2</robot_base_frame>
+</plugin>
+    </model>
+
+    <model name="warehouse_worker_3">
+      <static>false</static>
+            <pose>-2.50 -0.04 -0.5 0 0 0</pose> <link name="link">
+        <inertial>
+          <mass>25.0</mass>
+          <inertia><ixx>2.0</ixx><iyy>2.0</iyy><izz>1.0</izz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <surface><friction><ode><mu>0.0</mu><mu2>0.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <material><ambient>0.1 0.8 0.1 1</ambient><diffuse>0.1 0.8 0.1 1</diffuse></material> </visual>
+      </link>
+<plugin name="controller_3" filename="libgazebo_ros_planar_move.so">
+  <ros>
+    <remapping>cmd_vel:=cmd_vel_obstacle_3</remapping>
+    <remapping>odom:=odom_obstacle_3</remapping>
+  </ros>
+  <update_rate>20</update_rate>
+  <robot_base_frame>warehouse_worker_3</robot_base_frame>
+</plugin>
+    </model>
+
+    <model name="warehouse_worker_4">
+      <static>false</static>
+      <pose>0.07 2.70 0.5 0 0 0</pose> <link name="link">
+        <inertial>
+          <mass>25.0</mass>
+          <inertia><ixx>2.0</ixx><iyy>2.0</iyy><izz>1.0</izz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <surface><friction><ode><mu>0.0</mu><mu2>0.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.22</radius><length>1.7</length></cylinder></geometry>
+          <material><ambient>0.8 0.1 0.8 1</ambient><diffuse>0.8 0.1 0.8 1</diffuse></material> </visual>
+      </link>
+<plugin name="controller_4" filename="libgazebo_ros_planar_move.so">
+  <ros>
+    <remapping>cmd_vel:=cmd_vel_obstacle_4</remapping>
+    <remapping>odom:=odom_obstacle_4</remapping>
+  </ros>
+  <update_rate>20</update_rate>
+  <robot_base_frame>warehouse_worker_4</robot_base_frame>
+</plugin>
+    </model>
+
+  </world>
+</sdf>

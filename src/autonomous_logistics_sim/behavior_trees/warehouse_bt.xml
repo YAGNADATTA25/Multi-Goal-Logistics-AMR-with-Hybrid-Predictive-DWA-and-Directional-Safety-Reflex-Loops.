@@ -1,0 +1,23 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <PipelineSequence name="NavigateWithWait">
+        <!-- 1. The Navigation Task -->
+        <RateController hz="1.0">
+          <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBinary"/>
+        </RateController>
+        <FollowPath path="{path}" controller_id="FollowPath"/>
+        
+        <!-- 2. The Industrial Pause -->
+        <!-- This waits for 10 seconds (10000ms) after arriving -->
+        <Wait wait_duration="10.0"/> 
+      </PipelineSequence>
+
+      <!-- Recovery Actions if the robot gets stuck -->
+      <ReactiveFallback name="RecoveryActions">
+        <ClearCostmapAroundRobot name="ClearLocalCostmap"/>
+        <Spin spin_dist="1.57"/>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

@@ -1,0 +1,7 @@
+
+# --- Python Caches and Compilation Files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/

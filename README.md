@@ -4,7 +4,7 @@
 
 A simulated autonomous mobile robot (AMR) for multi-goal warehouse navigation in narrow aisles with moving obstacles. The system uses **Nav2 for obstacle-aware route planning and path following**, while a custom Python **Simulation Master** supervises velocity commands using LiDAR-based obstacle tracking and predictive Dynamic Window Approach (DWA) trajectory evaluation.
 
-> **Project status:** Validated in **Gazebo simulation**, not on physical hardware. One recorded run verified all six goals. The results are from a locally tested configuration. The committed source is being synchronized with that configuration; exact reproduction still needs runtime validation on Ubuntu 22.04 / ROS 2 Humble.
+> **Project status:** Validated in **Gazebo simulation**, not on physical hardware. One recorded run verified all six goals. The results are from a locally tested configuration. The repository now contains the updated predictive supervisor (25 × 25 sampling) and matching Nav2 parameter file, while retaining the original `warehouse_navigation.launch.py`. This GitHub revision has been statically reviewed, **not** rerun end-to-end; confirm the command-topic routing in your ROS 2 environment before treating it as a reproducible release.
 
 ## Demonstration highlights
 
@@ -86,7 +86,7 @@ Earlier development used **15 × 15 = 225** grid candidates and a **1.8 s** hori
 
 The following measurements are from **one successful Gazebo run**, analyzed from ROS 2 bag data and Simulation Master telemetry. **These numbers are not estimates or manually assigned scores:** they are the output of a Python analysis script run against `warehouse_run_01`, as reported by the project author. The exact stdout is preserved in [`demo_results/warehouse_run_01_summary.txt`](demo_results/warehouse_run_01_summary.txt).
 
-> **Evidence status:** The summary output was supplied by the project author. The original `.db3` bag has not yet been published with this README, so an external reviewer can inspect the method but cannot independently recalculate the run until the raw recording is shared. The verified working source-code versions should also be committed alongside it.
+> **Evidence status:** The summary output was supplied by the project author. The summary records individually verified goal logs from the successful original run. The updated master node currently reports an aggregate six-waypoint action outcome; the analysis script's per-goal log counter depends on the original log format and may not return six for a newly recorded run without additional per-goal logging. The original `.db3` bag has not yet been published with this README, so an external reviewer can inspect the method but cannot independently recalculate the run until the raw recording is shared. The verified working source-code versions should also be committed alongside it.
 
 ### How the data were collected
 

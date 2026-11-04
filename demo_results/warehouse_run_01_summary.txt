@@ -1,0 +1,15 @@
+WAREHOUSE AMR RESULTS
+-----------------------------
+Total odometry distance: 31.94 m
+Maximum measured speed: 0.271 m/s
+Mean speed while moving: 0.235 m/s
+Minimum valid LiDAR range: 0.120 m
+Global path messages: 155
+Changed path geometries: 150
+Mean reported DWA time: 24.54 ms
+Maximum reported DWA time: 95.00 ms
+Mean reported cross-track error: 3.26 cm
+Individually verified goal logs: 6
+Collision Monitor stop events: 0
+Collision Monitor slowdown events: 0
+Mission time: 155.00 seconds

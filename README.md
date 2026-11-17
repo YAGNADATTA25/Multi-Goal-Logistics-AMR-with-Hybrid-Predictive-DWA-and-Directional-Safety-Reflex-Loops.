@@ -16,6 +16,14 @@ A simulated autonomous mobile robot (AMR) for multi-goal warehouse navigation in
 
 
 
+https://github.com/user-attachments/assets/6ced8175-b0b0-4f14-bb40-4f8b35e61bb2
+
+
+
+
+
+
+
 ## System architecture
 
 ```text

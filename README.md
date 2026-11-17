@@ -14,7 +14,7 @@ A simulated autonomous mobile robot (AMR) for multi-goal warehouse navigation in
 - The master checks predicted robot motion against LiDAR detections and keeps its output close to Nav2's requested movement when safe.
 - Gazebo and RViz2 visualize robot motion, costmaps, and planned paths.
 
-**[Watch the full Gazebo + RViz demonstration](https://yagnadatta25.github.io/logistics-amr.html)** · [Portfolio](https://yagnadatta25.github.io/) · [Recorded run summary](demo_results/warehouse_run_01_summary.txt)
+
 
 ## System architecture
 
@@ -183,6 +183,8 @@ src/
   autonomous_logistics_sim/
     launch/warehouse_navigation.launch.py
     params/warehouse_params.yaml
+
+
     scripts/simulation_master.py
     worlds/warehouse.world
     maps/warehouse_map.yaml
